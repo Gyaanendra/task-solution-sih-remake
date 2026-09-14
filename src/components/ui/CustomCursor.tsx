@@ -17,22 +17,19 @@ export default function CustomCursor() {
     const ring = ringRef.current;
     if (!cursor || !ring) return;
 
+    // Use high-performance GSAP quickTo for zero-lag 120 FPS cursor tracking
+    const xDot = gsap.quickTo(cursor, "x", { duration: 0.08, ease: "power2.out" });
+    const yDot = gsap.quickTo(cursor, "y", { duration: 0.08, ease: "power2.out" });
+
+    const xRing = gsap.quickTo(ring, "x", { duration: 0.22, ease: "power3.out" });
+    const yRing = gsap.quickTo(ring, "y", { duration: 0.22, ease: "power3.out" });
+
     const onMouseMove = (e: MouseEvent) => {
-      if (!isVisible) setIsVisible(true);
-
-      gsap.to(cursor, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-
-      gsap.to(ring, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.25,
-        ease: "power2.out",
-      });
+      setIsVisible(true);
+      xDot(e.clientX);
+      yDot(e.clientY);
+      xRing(e.clientX);
+      yRing(e.clientY);
 
       // Detect hover on interactive items
       const target = e.target as HTMLElement | null;
@@ -52,7 +49,7 @@ export default function CustomCursor() {
     const onMouseLeave = () => setIsVisible(false);
     const onMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     document.addEventListener("mouseleave", onMouseLeave);
     document.addEventListener("mouseenter", onMouseEnter);
 
@@ -61,24 +58,24 @@ export default function CustomCursor() {
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("mouseenter", onMouseEnter);
     };
-  }, [isVisible]);
+  }, []);
 
   return (
     <>
       <div
         ref={cursorRef}
-        className={`fixed top-0 left-0 w-2.5 h-2.5 bg-[#FF7700] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300 ${
+        className={`fixed top-0 left-0 w-2 h-2 bg-[#FF7700] rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-transform duration-200 will-change-transform ${
           isVisible ? "opacity-100" : "opacity-0"
         } ${isPointer ? "scale-150" : "scale-100"}`}
       />
       <div
         ref={ringRef}
-        className={`fixed top-0 left-0 rounded-full border pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${
+        className={`fixed top-0 left-0 rounded-full border pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 transition-all duration-300 will-change-transform ${
           isVisible ? "opacity-100" : "opacity-0"
         } ${
           isPointer
-            ? "w-12 h-12 border-[#FF7700] bg-[#FF7700]/10 scale-110"
-            : "w-8 h-8 border-black/20 dark:border-white/30"
+            ? "w-11 h-11 border-[#FF7700] bg-[#FF7700]/10 scale-110"
+            : "w-8 h-8 border-black/25 dark:border-white/35"
         }`}
       />
     </>

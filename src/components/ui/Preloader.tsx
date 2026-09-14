@@ -23,6 +23,9 @@ export default function Preloader() {
 
     // Freeze page scrolling during preloader
     document.body.style.overflow = "hidden";
+    if (typeof window !== "undefined" && (window as any).__lenis) {
+      (window as any).__lenis.stop();
+    }
 
     const content = contentRef.current;
     const reel = reelRef.current;
@@ -40,8 +43,11 @@ export default function Preloader() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
-          // Restore scrolling only after the entire animation and buffer have fully completed
+          // Restore scrolling and resume Lenis only after the entire animation and buffer have fully completed
           document.body.style.overflow = "";
+          if (typeof window !== "undefined" && (window as any).__lenis) {
+            (window as any).__lenis.start();
+          }
           setIsDone(true);
         },
       });
@@ -133,6 +139,9 @@ export default function Preloader() {
     // Safety fallback (6.0s)
     const safety = setTimeout(() => {
       document.body.style.overflow = "";
+      if (typeof window !== "undefined" && (window as any).__lenis) {
+        (window as any).__lenis.start();
+      }
       setIsDone(true);
     }, 6000);
 
@@ -140,6 +149,9 @@ export default function Preloader() {
       clearTimeout(safety);
       ctx.revert();
       document.body.style.overflow = "";
+      if (typeof window !== "undefined" && (window as any).__lenis) {
+        (window as any).__lenis.start();
+      }
     };
   }, []);
 

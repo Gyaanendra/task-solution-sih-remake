@@ -52,15 +52,16 @@ export default function EditorialSplitShowcase({ onOpenExplorer }: EditorialSpli
         if (img) {
           gsap.fromTo(
             img,
-            { scale: 1.15 },
+            { scale: 1.12, yPercent: -5 },
             {
               scale: 1,
-              duration: 1.2,
-              ease: "power2.out",
+              yPercent: 5,
+              ease: "none",
               scrollTrigger: {
                 trigger: imgContainer,
-                start: "top 85%",
-                toggleActions: "play none none reverse",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1,
               },
             }
           );

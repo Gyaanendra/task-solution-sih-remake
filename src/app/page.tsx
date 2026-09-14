@@ -20,6 +20,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import ScrollExpand from "@/components/ui/ScrollExpand";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
 import Preloader from "@/components/ui/Preloader";
+import CinematicOverlay from "@/components/ui/CinematicOverlay";
 import { ArrowRight, Film } from "lucide-react";
 
 export default function Home() {
@@ -39,6 +40,9 @@ export default function Home() {
     <SmoothScroll>
       {/* Sovereign Tech Preloader Animation */}
       <Preloader />
+
+      {/* Cinematic Film Grain & Anamorphic Vignette Overlay */}
+      <CinematicOverlay />
 
       <main className="relative min-h-screen bg-[#FAF9F5] dark:bg-[#0B0C0E] text-[#121316] dark:text-[#F4F5F7] selection:bg-[#FF7700] selection:text-white">
         {/* Custom magnetic cursor */}

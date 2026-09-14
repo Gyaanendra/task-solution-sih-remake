@@ -11,13 +11,19 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
-      duration: 1.15,
+      duration: 1.35,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.8,
+      infinite: false,
     });
+
+    if (typeof window !== "undefined") {
+      (window as any).__lenis = lenis;
+    }
 
     // Sync Lenis scroll events with ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
@@ -32,6 +38,9 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     return () => {
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
+      if (typeof window !== "undefined") {
+        delete (window as any).__lenis;
+      }
     };
   }, []);
 
