@@ -148,10 +148,10 @@ export default function Hero({ onOpenSpocModal, onOpenGuidelinesModal }: HeroPro
 
           <div className="flex flex-wrap items-center gap-4 mt-10">
             <a
-              href="#problems"
+              href="#themes"
               className="px-8 py-4 rounded-full bg-[#121316] text-white dark:bg-white dark:text-[#121316] text-xs font-mono font-bold tracking-wider uppercase hover:opacity-90 transition-opacity shadow-md flex items-center gap-2"
             >
-              <span>Explore 3,100+ Challenges</span>
+              <span>Explore 16 Strategic Arenas</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </a>
 

@@ -21,17 +21,17 @@ export default function HorizontalTimeline() {
       const trigger = triggerRef.current;
       if (!track || !trigger) return;
 
-      const totalScroll = track.scrollWidth - window.innerWidth + 120;
+      const getTotalScroll = () => Math.max(0, track.scrollWidth - window.innerWidth + 120);
 
       const horizontalTween = gsap.to(track, {
-        x: -totalScroll,
+        x: () => -getTotalScroll(),
         ease: "none",
         scrollTrigger: {
           trigger: trigger,
           pin: true,
           scrub: 1,
           start: "top top",
-          end: () => `+=${totalScroll}`,
+          end: () => `+=${getTotalScroll()}`,
           invalidateOnRefresh: true,
         },
       });
@@ -39,10 +39,22 @@ export default function HorizontalTimeline() {
       return () => {
         horizontalTween.scrollTrigger?.kill();
         horizontalTween.kill();
+        gsap.set(track, { clearProps: "all" });
       };
     });
 
-    return () => mm.revert();
+    mm.add("(max-width: 1023px)", () => {
+      const track = trackRef.current;
+      if (track) {
+        gsap.set(track, { clearProps: "all" });
+      }
+    });
+
+    return () => {
+      mm.revert();
+      const track = trackRef.current;
+      if (track) gsap.set(track, { clearProps: "all" });
+    };
   }, []);
 
   return (
@@ -73,12 +85,20 @@ export default function HorizontalTimeline() {
               <ArrowRight className="w-3.5 h-3.5 text-neutral-500" />
             </div>
           </div>
+
+          {/* Mobile Swipe Hint */}
+          <div className="lg:hidden flex items-center justify-between mb-4 text-xs font-mono text-neutral-500">
+            <span>6-STAGE SELECTION FUNNEL</span>
+            <span className="text-[#FF7700] flex items-center gap-1 font-semibold">
+              SWIPE PHASES &rarr;
+            </span>
+          </div>
         </div>
 
-        {/* Horizontal Moving Cards Track */}
+        {/* Horizontal Moving Cards Track (Touch Snap on Mobile, Pinned on Desktop) */}
         <div
           ref={trackRef}
-          className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8 pb-24 lg:w-max"
+          className="flex flex-row overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-none gap-6 px-4 sm:px-6 lg:px-8 pb-14 lg:pb-24 lg:w-max"
         >
           {PROCESS_STEPS.map((step, idx) => {
             // Curated alternating squiggle styles for each stage of the funnel
@@ -87,7 +107,7 @@ export default function HorizontalTimeline() {
             return (
               <div
                 key={step.step}
-                className="group relative overflow-hidden w-full lg:w-[440px] flex-shrink-0 bg-white dark:bg-[#141519] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/25 rounded-2xl p-8 shadow-xs flex flex-col justify-between transition-all duration-300"
+                className="group relative overflow-hidden w-[85vw] sm:w-[420px] lg:w-[440px] flex-shrink-0 snap-center bg-white dark:bg-[#141519] border border-black/[0.08] dark:border-white/[0.08] hover:border-black/20 dark:hover:border-white/25 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col justify-between transition-all duration-300"
               >
                 {/* Decorative Top-Right Corner SVG Squiggle Flow Line */}
                 <div className="absolute top-0 right-0 w-44 h-32 pointer-events-none overflow-hidden select-none">

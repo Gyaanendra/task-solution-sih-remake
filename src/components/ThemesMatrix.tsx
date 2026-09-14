@@ -31,7 +31,7 @@ if (typeof window !== "undefined") {
 }
 
 interface ThemesMatrixProps {
-  onSelectTheme: (themeName: string) => void;
+  onSelectTheme?: (themeName: string) => void;
 }
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -67,7 +67,31 @@ export default function ThemesMatrix({ onSelectTheme }: ThemesMatrixProps) {
         gsap.set(".theme-card", { opacity: 1, y: 0 });
       });
 
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // Mobile carousel reveal
+      mm.add("(max-width: 639px) and (prefers-reduced-motion: no-preference)", () => {
+        gsap.fromTo(
+          ".theme-card",
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.04,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 85%",
+              once: true,
+            },
+          }
+        );
+        return () => {
+          gsap.set(".theme-card", { clearProps: "opacity,transform" });
+        };
+      });
+
+      // Desktop & Tablet batch reveal
+      mm.add("(min-width: 640px) and (prefers-reduced-motion: no-preference)", () => {
         ScrollTrigger.batch(".theme-card", {
           start: "top 90%",
           once: true,
@@ -86,10 +110,16 @@ export default function ThemesMatrix({ onSelectTheme }: ThemesMatrixProps) {
             );
           },
         });
+        return () => {
+          gsap.set(".theme-card", { clearProps: "opacity,transform" });
+        };
       });
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      gsap.set(".theme-card", { clearProps: "opacity,transform" });
+    };
   }, []);
 
   return (
@@ -118,8 +148,16 @@ export default function ThemesMatrix({ onSelectTheme }: ThemesMatrixProps) {
         </div>
       </div>
 
-      {/* Grid of 16 Themes (Bespoke Minimalist Line-Art Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Mobile Swipe Hint */}
+      <div className="sm:hidden flex items-center justify-between mb-4 px-1 text-xs font-mono text-neutral-500">
+        <span>16 STRATEGIC ARENAS</span>
+        <span className="text-[#FF7700] flex items-center gap-1 font-semibold">
+          SWIPE TO EXPLORE &rarr;
+        </span>
+      </div>
+
+      {/* Responsive Grid / Mobile Swipeable Carousel */}
+      <div className="flex sm:grid overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 sm:pb-0">
         {SIH_THEMES.map((theme: ThemeItem) => {
           const IconComponent = ICON_MAP[theme.iconName] || Cpu;
 
@@ -127,11 +165,9 @@ export default function ThemesMatrix({ onSelectTheme }: ThemesMatrixProps) {
             <div
               key={theme.id}
               onClick={() => {
-                onSelectTheme(theme.name);
-                const el = document.getElementById("problems");
-                el?.scrollIntoView({ behavior: "smooth" });
+                onSelectTheme?.(theme.name);
               }}
-              className="theme-card group cursor-pointer bg-white dark:bg-[#141519] rounded-xl border border-black/[0.08] dark:border-white/[0.08] p-5 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between opacity-0 will-change-transform"
+              className="theme-card group cursor-pointer w-[80vw] max-w-[300px] sm:w-auto flex-shrink-0 snap-center bg-white dark:bg-[#141519] rounded-xl border border-black/[0.08] dark:border-white/[0.08] p-5 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between opacity-0 will-change-transform"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">

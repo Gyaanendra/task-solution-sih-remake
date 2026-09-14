@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 import { NODAL_CENTERS, NodalCenter } from "@/data/sih-data";
 import { Radio, Navigation } from "lucide-react";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 
+const INDIA_TOPO_URL = "/maps/india-states.json";
+
 export default function NodalRadar() {
   const [activeCenter, setActiveCenter] = useState<NodalCenter>(NODAL_CENTERS[0]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <section
@@ -56,22 +64,22 @@ export default function NodalRadar() {
             </div>
           </div>
 
-          {/* India Sovereign Telemetry Map Canvas */}
-          <div className="relative w-full h-[460px] sm:h-[520px] bg-neutral-50 dark:bg-[#0E0F12] rounded-xl border border-black/[0.08] dark:border-white/[0.08] overflow-hidden flex items-center justify-center select-none">
+          {/* India Sovereign Telemetry Map Canvas (React Simple Maps GIS Engine) */}
+          <div className="relative w-full h-[460px] sm:h-[540px] bg-neutral-50 dark:bg-[#0E0F12] rounded-xl border border-black/[0.08] dark:border-white/[0.08] overflow-hidden flex items-center justify-center select-none">
             {/* Top-Right HUD Coordinates Readout */}
             <div className="absolute top-3 right-3 z-20 flex flex-col items-end text-[9px] font-mono text-neutral-400 pointer-events-none">
-              <span className="text-[#FF7700] font-semibold">GEOGRAPHIC RADAR 2026</span>
-              <span>IST (UTC+05:30) &bull; 82.5&deg;E</span>
+              <span className="text-[#FF7700] font-semibold">GIS TELEMETRY PROJECTION // 2026</span>
+              <span>GEOMERCATOR &bull; CENTER [82.5&deg;E, 22.5&deg;N]</span>
             </div>
 
             {/* Bottom-Left Latitude / Longitude Telemetry Stamp */}
             <div className="absolute bottom-3 left-3 z-20 text-[9px] font-mono text-neutral-400 pointer-events-none flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>LAT 8&deg;4&prime;N &mdash; 37&deg;6&prime;N // LON 68&deg;7&prime;E &mdash; 97&deg;25&prime;E</span>
+              <span>36 STATES &amp; UTs &bull; REACT-SIMPLE-MAPS</span>
             </div>
 
-            {/* Telemetry Grid Mesh & Concentric Range Arcs */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.07] dark:opacity-[0.12]">
+            {/* Telemetry Grid Mesh */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.12]">
               <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <pattern id="telemetry-grid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -82,114 +90,115 @@ export default function NodalRadar() {
               </svg>
             </div>
 
-            {/* Master SVG Map of India */}
-            <svg
-              viewBox="0 0 500 580"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              {/* Concentric Radar Rings Centered on Central India */}
-              <circle cx="215" cy="290" r="70" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.08" />
-              <circle cx="215" cy="290" r="140" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.08" />
-              <circle cx="215" cy="290" r="210" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.08" strokeDasharray="3 3" />
-              <circle cx="215" cy="290" r="280" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.05" />
+            {/* Rotating Telemetry Radar Sweep Beam */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+              <div className="w-[500px] h-[500px] rounded-full border border-black/[0.04] dark:border-white/[0.04] relative origin-center animate-[spin_12s_linear_infinite]">
+                <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-[#FF7700]/10 via-[#FF7700]/3 to-transparent rounded-tr-full" />
+                <div className="absolute top-0 right-1/2 w-1/2 h-[1px] bg-gradient-to-l from-[#FF7700]/35 to-transparent" />
+              </div>
+            </div>
 
-              {/* Cardinal Crosshairs */}
-              <line x1="215" y1="20" x2="215" y2="560" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.06" strokeDasharray="2 2" />
-              <line x1="20" y1="290" x2="480" y2="290" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.06" strokeDasharray="2 2" />
+            {/* React Simple Maps Composable Map */}
+            {isMounted ? (
+              <ComposableMap
+                projection="geoMercator"
+                projectionConfig={{
+                  scale: 980,
+                  center: [82.5, 22.5],
+                }}
+                width={800}
+                height={600}
+                className="w-full h-full relative z-10"
+              >
+                {/* Geographies: 36 States & UTs of India */}
+                <Geographies geography={INDIA_TOPO_URL}>
+                  {({ geographies }) =>
+                    geographies.map((geo) => {
+                      const stateName = geo.properties?.st_nm || "";
+                      const isHostState = activeCenter.state.toLowerCase() === stateName.toLowerCase();
 
-              {/* Tropic of Cancer (23.5° N) Latitude Marker */}
-              <line x1="60" y1="265" x2="440" y2="265" stroke="currentColor" strokeWidth="1" strokeOpacity="0.12" strokeDasharray="4 4" />
-              <text x="70" y="260" fill="currentColor" fillOpacity="0.25" fontSize="8" fontFamily="monospace">TROPIC OF CANCER // 23.5&deg;N</text>
+                      return (
+                        <Geography
+                          key={geo.rsmKey}
+                          geography={geo}
+                          className={`transition-colors duration-300 focus:outline-hidden cursor-pointer ${
+                            isHostState
+                              ? "fill-[#FF7700]/25 stroke-[#FF7700]"
+                              : "fill-black/[0.04] dark:fill-white/[0.04] stroke-black/20 dark:stroke-white/20 hover:fill-[#FF7700]/15 hover:stroke-[#FF7700]"
+                          }`}
+                          strokeWidth={isHostState ? 1.4 : 0.6}
+                          style={{ outline: "none" }}
+                        />
+                      );
+                    })
+                  }
+                </Geographies>
 
-              {/* Authentic Sovereign Contour of India */}
-              <path
-                d="M 195 40 
-                   L 215 45 L 235 62 L 248 85 L 238 108 L 244 125
-                   L 225 138 L 260 160 L 305 182
-                   L 322 168 L 328 178 L 338 184 L 365 186
-                   L 390 152 L 430 142 L 458 165 L 465 190
-                   L 468 220 L 450 250 L 444 290 L 426 278
-                   L 402 238 L 378 245 L 372 278
-                   L 375 292 L 362 312 L 340 348 L 308 402
-                   L 278 456 L 252 505 L 216 560
-                   L 202 525 L 186 455 L 172 414 L 152 365
-                   L 142 318 L 118 326 L 88 312 L 102 280
-                   L 86 260 L 68 244 L 78 228 L 112 196
-                   L 126 162 L 148 132 L 168 98 L 176 64
-                   Z"
-                fill="currentColor"
-                fillOpacity="0.03"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeOpacity="0.3"
-                className="dark:fill-white dark:fill-opacity-[0.04] dark:stroke-white dark:stroke-opacity-40"
-                strokeLinejoin="round"
-              />
+                {/* Geotagged Nodal Centers via RSM Marker */}
+                {NODAL_CENTERS.map((hub) => {
+                  const isSelected = activeCenter.id === hub.id;
 
-              {/* Lakshadweep & Andaman Nicobar Islands */}
-              <circle cx="140" cy="495" r="2.5" fill="currentColor" fillOpacity="0.3" />
-              <circle cx="136" cy="515" r="2" fill="currentColor" fillOpacity="0.3" />
-              <circle cx="455" cy="430" r="2" fill="currentColor" fillOpacity="0.3" />
-              <circle cx="458" cy="455" r="2.5" fill="currentColor" fillOpacity="0.3" />
-              <circle cx="462" cy="485" r="2" fill="currentColor" fillOpacity="0.3" />
+                  return (
+                    <Marker
+                      key={hub.id}
+                      coordinates={hub.geoCoordinates}
+                      onClick={() => setActiveCenter(hub)}
+                      className="cursor-pointer group focus:outline-hidden"
+                    >
+                      {/* Active Nodal Ping Beacon */}
+                      {isSelected && (
+                        <>
+                          <circle r={14} fill="#FF7700" fillOpacity={0.3} className="animate-ping" />
+                          <circle r={9} fill="none" stroke="#FF7700" strokeWidth={1.5} strokeDasharray="3 3" />
+                        </>
+                      )}
 
-              {/* Rotating Telemetry Radar Sweep Beam */}
-              <g className="origin-[215px_290px] animate-[spin_10s_linear_infinite]">
-                <line x1="215" y1="290" x2="480" y2="290" stroke="#FF7700" strokeWidth="1.5" strokeOpacity="0.45" />
-                <path d="M 215 290 L 480 240 A 270 270 0 0 1 480 290 Z" fill="#FF7700" fillOpacity="0.08" />
-              </g>
+                      {/* Hub Core Node */}
+                      <circle
+                        r={isSelected ? 5.5 : 3.5}
+                        fill={isSelected ? "#FF7700" : "#E65100"}
+                        stroke="#FFFFFF"
+                        strokeWidth={isSelected ? 2 : 1}
+                        className="transition-transform duration-300 group-hover:scale-125"
+                      />
 
-              {/* Inter-Hub National Synchronization Telemetry Arcs */}
-              <path d="M 190 174 L 130 336 L 210 418 L 220 360 Z" stroke="#FF7700" strokeWidth="0.8" strokeOpacity="0.2" strokeDasharray="3 3" />
-              <path d="M 190 174 L 240 208 L 340 267 L 410 197" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.15" strokeDasharray="3 3" />
-            </svg>
-
-            {/* Interactive Nodal Hub Pointers Pinned Accurately to Map of India */}
-            {NODAL_CENTERS.map((hub) => {
-              const isSelected = activeCenter.id === hub.id;
-
-              return (
-                <button
-                  key={hub.id}
-                  onClick={() => setActiveCenter(hub)}
-                  style={{
-                    left: `${hub.coordinates.x}%`,
-                    top: `${hub.coordinates.y}%`,
-                  }}
-                  className={`absolute -translate-x-1/2 -translate-y-1/2 group p-2 transition-all cursor-pointer z-10 ${
-                    isSelected ? "scale-125 z-30" : "hover:scale-110"
-                  }`}
-                  title={`${hub.name} (${hub.city})`}
-                >
-                  {/* Radar ping on selected active hub */}
-                  {isSelected && (
-                    <span className="absolute inset-1 rounded-full bg-[#FF7700] opacity-40 animate-ping pointer-events-none" />
-                  )}
-
-                  <span
-                    className={`block w-2.5 h-2.5 rounded-full transition-all ${
-                      isSelected
-                        ? "bg-[#FF7700] ring-4 ring-[#FF7700]/30 shadow-md shadow-[#FF7700]/50"
-                        : "bg-neutral-500 dark:bg-neutral-400 group-hover:bg-[#FF7700]"
-                    }`}
-                  />
-
-                  {/* Geotag City Pill */}
-                  <span
-                    className={`absolute top-4 left-1/2 -translate-x-1/2 text-[9px] font-mono whitespace-nowrap px-1.5 py-0.5 rounded shadow-xs transition-opacity ${
-                      isSelected
-                        ? "bg-[#121316] text-white dark:bg-white dark:text-[#121316] opacity-100 font-bold border border-black/10 dark:border-white/10"
-                        : "bg-white/95 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 opacity-0 group-hover:opacity-100 border border-black/10 dark:border-white/10"
-                    }`}
-                  >
-                    {hub.city}
-                  </span>
-                </button>
-              );
-            })}
+                      {/* City Badge */}
+                      <g
+                        className={`transition-opacity duration-200 pointer-events-none select-none ${
+                          isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        }`}
+                      >
+                        <rect
+                          x={-34}
+                          y={-22}
+                          width={68}
+                          height={15}
+                          rx={3}
+                          fill="#121316"
+                          stroke="rgba(255,255,255,0.2)"
+                          strokeWidth={0.6}
+                        />
+                        <text
+                          textAnchor="middle"
+                          y={-11}
+                          fill="#FFFFFF"
+                          fontSize={8}
+                          fontFamily="monospace"
+                          fontWeight="bold"
+                          letterSpacing="0.05em"
+                        >
+                          {hub.city.toUpperCase()}
+                        </text>
+                      </g>
+                    </Marker>
+                  );
+                })}
+              </ComposableMap>
+            ) : (
+              <div className="flex items-center justify-center text-xs font-mono text-neutral-400">
+                <span>INITIALIZING GIS ENGINE...</span>
+              </div>
+            )}
           </div>
 
           <div className="mt-4 pt-3 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-[11px] font-mono text-neutral-500">
@@ -240,12 +249,12 @@ export default function NodalRadar() {
           <span className="text-[10px] font-mono text-neutral-400 uppercase block mb-2">
             REGIONAL HUBS:
           </span>
-          <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto pr-1">
+          <div className="flex overflow-x-auto sm:flex-wrap scrollbar-none gap-1.5 py-1 -mx-2 px-2 sm:mx-0 sm:px-0 max-h-32">
             {NODAL_CENTERS.map((hub) => (
               <button
                 key={hub.id}
                 onClick={() => setActiveCenter(hub)}
-                className={`text-[11px] font-mono px-2.5 py-1 rounded transition-colors ${
+                className={`text-[11px] font-mono px-2.5 py-1 rounded transition-colors flex-shrink-0 sm:flex-shrink ${
                   activeCenter.id === hub.id
                     ? "bg-[#121316] text-white dark:bg-white dark:text-[#121316] font-bold"
                     : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200"

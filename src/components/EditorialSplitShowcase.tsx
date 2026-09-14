@@ -289,12 +289,12 @@ export default function EditorialSplitShowcase({ onOpenExplorer }: EditorialSpli
 
               <button
                 onClick={() => {
-                  const el = document.getElementById("problems");
+                  const el = document.getElementById("themes");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="hover:text-neutral-900 dark:hover:text-white transition-colors font-bold text-neutral-800 dark:text-neutral-200"
               >
-                EXPLORE ALL 3,100+ PROBLEMS &rarr;
+                EXPLORE ALL 16 ARENAS &rarr;
               </button>
             </div>
           </div>
@@ -343,7 +343,7 @@ export default function EditorialSplitShowcase({ onOpenExplorer }: EditorialSpli
               <ul className="space-y-6">
                 <li>
                   <a
-                    href="#problems"
+                    href="#themes"
                     className="flex items-baseline group"
                   >
                     <span className="text-2xl font-serif italic text-neutral-800 dark:text-neutral-200 mr-4 group-hover:text-[#FF7700] transition-colors">

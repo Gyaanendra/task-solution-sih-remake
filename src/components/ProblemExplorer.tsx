@@ -168,9 +168,16 @@ export default function ProblemExplorer({
       </div>
       </ScrollReveal>
 
-      {/* Problem Cards Grid (HireLaw Style) */}
+      {/* Problem Cards Grid / Mobile Swipeable Carousel */}
       <ScrollReveal preset="fadeUp" delay={0.1}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="md:hidden flex items-center justify-between mb-4 px-1 text-xs font-mono text-neutral-500">
+          <span>CHALLENGES ({filteredProblems.length})</span>
+          <span className="text-[#FF7700] flex items-center gap-1 font-semibold">
+            SWIPE TO BROWSE &rarr;
+          </span>
+        </div>
+
+        <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4 md:pb-0">
           {filteredProblems.map((ps) => {
             const isBookmarked = bookmarkedIds.includes(ps.id);
 
@@ -178,7 +185,7 @@ export default function ProblemExplorer({
               <div
                 key={ps.id}
                 onClick={() => setSelectedPS(ps)}
-                className="group cursor-pointer bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-6 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between"
+                className="group cursor-pointer w-[84vw] max-w-[340px] md:w-auto flex-shrink-0 snap-center bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-6 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">

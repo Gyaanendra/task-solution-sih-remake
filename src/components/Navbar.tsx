@@ -12,8 +12,8 @@ export default function Navbar({ onOpenSpocModal, onOpenGuidelinesModal }: Navba
     { label: "The Arena", link: "#arena", ariaLabel: "Software vs Hardware Arena" },
     { label: "Process Roadmap", link: "#journey", ariaLabel: "6-Phase National Process" },
     { label: "16 Themes", link: "#themes", ariaLabel: "16 Innovation Domains" },
-    { label: "Problem Terminal", link: "#problems", ariaLabel: "3,100+ Mission Statements" },
     { label: "Nodal Radar", link: "#radar", ariaLabel: "75+ Pan-India Hubs" },
+    { label: "Leadership", link: "#leadership", ariaLabel: "Vision & Governance" },
     { label: "Find College SPOC", link: "#", ariaLabel: "Find College SPOC", onClick: onOpenSpocModal },
     { label: "Download Idea PPT", link: "#", ariaLabel: "Download Idea Presentation Format", onClick: onOpenGuidelinesModal },
   ];

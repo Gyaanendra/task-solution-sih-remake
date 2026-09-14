@@ -8,14 +8,12 @@ import MetricsBento from "@/components/MetricsBento";
 import EditorialSplitShowcase from "@/components/EditorialSplitShowcase";
 import HorizontalTimeline from "@/components/HorizontalTimeline";
 import ThemesMatrix from "@/components/ThemesMatrix";
-import ProblemExplorer from "@/components/ProblemExplorer";
 import NodalRadar from "@/components/NodalRadar";
 import LeadershipSection from "@/components/LeadershipSection";
 import PastEditions from "@/components/PastEditions";
 import Footer from "@/components/Footer";
 import SpocModal from "@/components/SpocModal";
 import GuidelinesModal from "@/components/GuidelinesModal";
-import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 import ScrollExpand from "@/components/ui/ScrollExpand";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
@@ -26,15 +24,6 @@ import { ArrowRight, Film } from "lucide-react";
 export default function Home() {
   const [isSpocOpen, setIsSpocOpen] = useState(false);
   const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
-  const [selectedThemeFilter, setSelectedThemeFilter] = useState<string | null>(null);
-
-  const handleSelectTheme = (themeName: string) => {
-    setSelectedThemeFilter(themeName);
-  };
-
-  const handleClearTheme = () => {
-    setSelectedThemeFilter(null);
-  };
 
   return (
     <SmoothScroll>
@@ -45,9 +34,6 @@ export default function Home() {
       <CinematicOverlay />
 
       <main className="relative min-h-screen bg-[#FAF9F5] dark:bg-[#0B0C0E] text-[#121316] dark:text-[#F4F5F7] selection:bg-[#FF7700] selection:text-white">
-        {/* Custom magnetic cursor */}
-        <CustomCursor />
-
         {/* Global Navigation Header */}
         <Navbar
           onOpenSpocModal={() => setIsSpocOpen(true)}
@@ -128,9 +114,8 @@ export default function Home() {
         {/* 02. Editorial Pinned Split-Screen Showcase */}
         <div className="my-8 sm:my-16">
           <EditorialSplitShowcase
-            onOpenExplorer={(theme) => {
-              if (theme) setSelectedThemeFilter(theme);
-              const el = document.getElementById("problems");
+            onOpenExplorer={() => {
+              const el = document.getElementById("themes");
               el?.scrollIntoView({ behavior: "smooth" });
             }}
           />
@@ -143,16 +128,7 @@ export default function Home() {
 
         {/* 04. 16 Official Innovation Domains */}
         <div className="my-8 sm:my-16">
-          <ThemesMatrix onSelectTheme={handleSelectTheme} />
-        </div>
-
-        {/* 05. Problem Statements Terminal & Explorer */}
-        <div className="my-8 sm:my-16">
-          <ProblemExplorer
-            selectedThemeFilter={selectedThemeFilter}
-            onClearThemeFilter={handleClearTheme}
-            onOpenGuidelinesModal={() => setIsGuidelinesOpen(true)}
-          />
+          <ThemesMatrix />
         </div>
 
         {/* 06. National 75+ Nodal Centers Radar */}

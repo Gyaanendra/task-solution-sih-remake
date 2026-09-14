@@ -11,13 +11,13 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
-      duration: 1.35,
+      duration: 1.25,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.8,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.0,
       infinite: false,
     });
 
@@ -35,7 +35,21 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    // Synchronize dimensions when switching between desktop and mobile viewports
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        lenis.resize();
+        ScrollTrigger.refresh();
+      }, 150);
+    };
+
+    window.addEventListener("resize", handleResize);
+
     return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
       if (typeof window !== "undefined") {

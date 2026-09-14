@@ -40,12 +40,15 @@ html {
   background-color: var(--bg-main);
   color: var(--text-primary);
   font-family: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: clip;
+  max-width: 100vw;
 }
 
 body {
   background-color: var(--bg-main);
   color: var(--text-primary);
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100vw;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -140,5 +143,20 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Hide scrollbar for mobile carousels while keeping native touch swipe */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fluid scroll velocity skew effect */
+.velocity-surface {
+  transform-origin: center center;
+  will-change: transform;
 }
 

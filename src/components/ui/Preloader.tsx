@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import TextLoop from "./TextLoop";
 
 const YEARS = ["17", "18", "19", "20", "21", "22", "23", "24", "25", "26"];
 
@@ -70,6 +71,12 @@ export default function Preloader() {
         { yPercent: 0, opacity: 1, duration: 0.5, stagger: 0.025, ease: "power3.out" },
         "<0.15"
       );
+      tl.fromTo(
+        ".preloader-text-loop",
+        { opacity: 0, scale: 0.96 },
+        { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" },
+        "<0.1"
+      );
 
       // 2. Poised hold on 2017 to establish the historic starting milestone
       tl.to({}, { duration: 0.35 });
@@ -106,7 +113,7 @@ export default function Preloader() {
         }
       );
       tl.to(
-        [content, leftRail],
+        [content, leftRail, ".preloader-text-loop"],
         {
           y: -40,
           opacity: 0,
@@ -252,10 +259,32 @@ export default function Preloader() {
             </span>
           </div>
 
+          {/* Ambient Curved Diagonal TextLoop Ribbon from React Bits */}
+          <div className="preloader-text-loop pointer-events-none absolute -inset-x-28 sm:-inset-x-60 top-[51%] -translate-y-1/2 -rotate-[11deg] sm:-rotate-[13deg] scale-105 sm:scale-110 opacity-0 will-change-transform z-0 overflow-visible">
+            <TextLoop
+              text="SMART INDIA HACKATHON ✦ 1.8M ENGINEERS ✦ 75 NODAL HUBS ✦ 2017 — 2026 ✦ VIKSIT BHARAT"
+              shape="wave"
+              speed={58}
+              direction="forward"
+              separator="✦"
+              curviness={52}
+              fontSize={18}
+              fontWeight={700}
+              letterSpacing={3}
+              uppercase
+              color="#ECE7DF"
+              ribbon={true}
+              ribbonColor="rgba(255, 120, 0, 0.16)"
+              ribbonWidth={48}
+              pauseOnHover={false}
+              className="w-full opacity-70"
+            />
+          </div>
+
           {/* Bottom Right Poetic Tagline (Exact match to reference photo layout) */}
           <div
             ref={bottomQuoteRef}
-            className="flex flex-col items-end self-end text-right max-w-lg pb-2 sm:pb-4 will-change-transform"
+            className="relative z-10 flex flex-col items-end self-end text-right max-w-lg pb-2 sm:pb-4 will-change-transform"
           >
             <p className="font-sans text-xl sm:text-2xl lg:text-3xl text-[#ECE7DF] font-normal tracking-tight mb-2">
               {"A journey through years of national innovation".split(" ").map((word, i) => (

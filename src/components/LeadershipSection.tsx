@@ -27,13 +27,20 @@ export default function LeadershipSection() {
         </div>
       </div>
 
-      {/* Leadership Cards (HireLaw Attorney Layout with Staggered Scroll Reveal) */}
+      {/* Leadership Cards (Responsive Grid / Mobile Touch Carousel) */}
       <ScrollReveal preset="staggerUp" stagger={0.1} childSelector=".leadership-card">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:hidden flex items-center justify-between mb-4 px-1 text-xs font-mono text-neutral-500">
+          <span>GOVERNANCE PERSPECTIVES</span>
+          <span className="text-[#FF7700] flex items-center gap-1 font-semibold">
+            SWIPE QUOTES &rarr;
+          </span>
+        </div>
+
+        <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:grid-cols-3 gap-6 pb-4 md:pb-0">
           {LEADERSHIP_DATA.map((leader, idx) => (
             <div
               key={idx}
-              className="leadership-card bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-8 shadow-xs flex flex-col justify-between hover:border-black/20 dark:hover:border-white/20 transition-all"
+              className="leadership-card w-[84vw] max-w-[340px] md:w-auto flex-shrink-0 snap-center bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-7 sm:p-8 shadow-xs flex flex-col justify-between hover:border-black/20 dark:hover:border-white/20 transition-all"
             >
               <div>
                 <span className="text-[10px] font-mono tracking-widest text-[#E65100] uppercase font-bold block mb-4">

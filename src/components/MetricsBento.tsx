@@ -95,10 +95,10 @@ export default function MetricsBento() {
           <div className="pt-8 mt-8 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
             <span className="text-neutral-400">SANDBOX CLOUD GRANTS INCLUDED</span>
             <a
-              href="#problems"
+              href="#themes"
               className="text-[#FF7700] hover:underline font-semibold flex items-center gap-1"
             >
-              <span>Explore Software Challenges</span>
+              <span>Explore Software Domains</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -151,10 +151,10 @@ export default function MetricsBento() {
           <div className="pt-8 mt-8 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono">
             <span className="text-neutral-400">UP TO ₹1,00,000 PER WINNING PROTOTYPE</span>
             <a
-              href="#problems"
+              href="#themes"
               className="text-[#FF7700] hover:underline font-semibold flex items-center gap-1"
             >
-              <span>Explore Hardware Challenges</span>
+              <span>Explore Hardware Domains</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>

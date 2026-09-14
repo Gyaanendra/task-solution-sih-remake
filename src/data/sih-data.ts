@@ -46,6 +46,7 @@ export interface NodalCenter {
   city: string;
   state: string;
   coordinates: { x: number; y: number }; // Percentage on map
+  geoCoordinates: [number, number]; // [longitude, latitude] for GIS & react-simple-maps
   category: 'Software' | 'Hardware' | 'Both';
   teamsHosted: number;
 }
@@ -492,21 +493,21 @@ export const PAST_EDITIONS: PastEdition[] = [
 ];
 
 export const NODAL_CENTERS: NodalCenter[] = [
-  { id: "delhi", name: "IIT Delhi", city: "New Delhi", state: "Delhi", coordinates: { x: 38, y: 30 }, category: "Both", teamsHosted: 180 },
-  { id: "bombay", name: "IIT Bombay", city: "Mumbai", state: "Maharashtra", coordinates: { x: 26, y: 58 }, category: "Software", teamsHosted: 160 },
-  { id: "madras", name: "IIT Madras", city: "Chennai", state: "Tamil Nadu", coordinates: { x: 44, y: 78 }, category: "Both", teamsHosted: 150 },
-  { id: "kanpur", name: "IIT Kanpur", city: "Kanpur", state: "Uttar Pradesh", coordinates: { x: 48, y: 36 }, category: "Hardware", teamsHosted: 140 },
-  { id: "kharagpur", name: "IIT Kharagpur", city: "Kharagpur", state: "West Bengal", coordinates: { x: 68, y: 46 }, category: "Software", teamsHosted: 170 },
-  { id: "roorkee", name: "IIT Roorkee", city: "Roorkee", state: "Uttarakhand", coordinates: { x: 40, y: 24 }, category: "Both", teamsHosted: 130 },
-  { id: "hyderabad", name: "IIIT Hyderabad", city: "Hyderabad", state: "Telangana", coordinates: { x: 40, y: 62 }, category: "Software", teamsHosted: 190 },
-  { id: "guwahati", name: "IIT Guwahati", city: "Guwahati", state: "Assam", coordinates: { x: 82, y: 34 }, category: "Both", teamsHosted: 120 },
-  { id: "bengaluru", name: "IISc Bengaluru", city: "Bengaluru", state: "Karnataka", coordinates: { x: 38, y: 72 }, category: "Hardware", teamsHosted: 160 },
-  { id: "ahmedabad", name: "Nirma University", city: "Ahmedabad", state: "Gujarat", coordinates: { x: 24, y: 46 }, category: "Software", teamsHosted: 140 },
-  { id: "bhopal", name: "MANIT Bhopal", city: "Bhopal", state: "Madhya Pradesh", coordinates: { x: 42, y: 46 }, category: "Both", teamsHosted: 130 },
-  { id: "jaipur", name: "MNIT Jaipur", city: "Jaipur", state: "Rajasthan", coordinates: { x: 34, y: 34 }, category: "Software", teamsHosted: 140 },
-  { id: "chandigarh", name: "Punjab Engineering College", city: "Chandigarh", state: "Punjab", coordinates: { x: 36, y: 22 }, category: "Both", teamsHosted: 120 },
-  { id: "kochi", name: "CUSAT", city: "Kochi", state: "Kerala", coordinates: { x: 34, y: 84 }, category: "Software", teamsHosted: 110 },
-  { id: "bhubaneswar", name: "IIT Bhubaneswar", city: "Bhubaneswar", state: "Odisha", coordinates: { x: 64, y: 54 }, category: "Both", teamsHosted: 130 },
+  { id: "delhi", name: "IIT Delhi", city: "New Delhi", state: "Delhi", coordinates: { x: 38, y: 30 }, geoCoordinates: [77.1926, 28.5457], category: "Both", teamsHosted: 180 },
+  { id: "bombay", name: "IIT Bombay", city: "Mumbai", state: "Maharashtra", coordinates: { x: 26, y: 58 }, geoCoordinates: [72.9133, 19.1334], category: "Software", teamsHosted: 160 },
+  { id: "madras", name: "IIT Madras", city: "Chennai", state: "Tamil Nadu", coordinates: { x: 44, y: 78 }, geoCoordinates: [80.2337, 12.9915], category: "Both", teamsHosted: 150 },
+  { id: "kanpur", name: "IIT Kanpur", city: "Kanpur", state: "Uttar Pradesh", coordinates: { x: 48, y: 36 }, geoCoordinates: [80.2329, 26.5123], category: "Hardware", teamsHosted: 140 },
+  { id: "kharagpur", name: "IIT Kharagpur", city: "Kharagpur", state: "West Bengal", coordinates: { x: 68, y: 46 }, geoCoordinates: [87.3099, 22.3149], category: "Software", teamsHosted: 170 },
+  { id: "roorkee", name: "IIT Roorkee", city: "Roorkee", state: "Uttarakhand", coordinates: { x: 40, y: 24 }, geoCoordinates: [77.8964, 29.8649], category: "Both", teamsHosted: 130 },
+  { id: "hyderabad", name: "IIIT Hyderabad", city: "Hyderabad", state: "Telangana", coordinates: { x: 40, y: 62 }, geoCoordinates: [78.3489, 17.4455], category: "Software", teamsHosted: 190 },
+  { id: "guwahati", name: "IIT Guwahati", city: "Guwahati", state: "Assam", coordinates: { x: 82, y: 34 }, geoCoordinates: [91.6916, 26.1878], category: "Both", teamsHosted: 120 },
+  { id: "bengaluru", name: "IISc Bengaluru", city: "Bengaluru", state: "Karnataka", coordinates: { x: 38, y: 72 }, geoCoordinates: [77.5671, 13.0158], category: "Hardware", teamsHosted: 160 },
+  { id: "ahmedabad", name: "Nirma University", city: "Ahmedabad", state: "Gujarat", coordinates: { x: 24, y: 46 }, geoCoordinates: [72.5447, 23.1287], category: "Software", teamsHosted: 140 },
+  { id: "bhopal", name: "MANIT Bhopal", city: "Bhopal", state: "Madhya Pradesh", coordinates: { x: 42, y: 46 }, geoCoordinates: [77.4058, 23.2156], category: "Both", teamsHosted: 130 },
+  { id: "jaipur", name: "MNIT Jaipur", city: "Jaipur", state: "Rajasthan", coordinates: { x: 34, y: 34 }, geoCoordinates: [75.8118, 26.8640], category: "Software", teamsHosted: 140 },
+  { id: "chandigarh", name: "Punjab Engineering College", city: "Chandigarh", state: "Punjab", coordinates: { x: 36, y: 22 }, geoCoordinates: [76.7868, 30.7663], category: "Both", teamsHosted: 120 },
+  { id: "kochi", name: "CUSAT", city: "Kochi", state: "Kerala", coordinates: { x: 34, y: 84 }, geoCoordinates: [76.3283, 10.0431], category: "Software", teamsHosted: 110 },
+  { id: "bhubaneswar", name: "IIT Bhubaneswar", city: "Bhubaneswar", state: "Odisha", coordinates: { x: 64, y: 54 }, geoCoordinates: [85.6744, 20.1484], category: "Both", teamsHosted: 130 },
 ];
 
 export const SAMPLE_SPOCS = [

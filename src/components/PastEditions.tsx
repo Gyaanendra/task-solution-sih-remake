@@ -33,8 +33,16 @@ export default function PastEditions() {
 
       {/* Grid: Timeline List (5 cols) & Spotlight Card (7 cols) */}
       <ScrollReveal preset="fadeUp" delay={0.15}>
+        {/* Mobile Swipe Hint */}
+        <div className="lg:hidden flex items-center justify-between mb-3 text-xs font-mono text-neutral-500">
+          <span>SELECT ARCHIVE YEAR</span>
+          <span className="text-[#FF7700] flex items-center gap-1 font-semibold">
+            SWIPE YEARS &rarr;
+          </span>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-5 space-y-2">
+        <div className="lg:col-span-5 flex lg:flex-col overflow-x-auto lg:overflow-visible scrollbar-none gap-2 pb-2 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0">
           {PAST_EDITIONS.map((ed) => {
             const isSelected = selectedEdition.year === ed.year;
 
@@ -42,7 +50,7 @@ export default function PastEditions() {
               <div
                 key={ed.year}
                 onClick={() => setSelectedEdition(ed)}
-                className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between ${
+                className={`cursor-pointer p-4 rounded-xl border transition-all flex items-center justify-between flex-shrink-0 min-w-[200px] lg:min-w-0 ${
                   isSelected
                     ? "bg-[#121316] text-white dark:bg-white dark:text-[#121316] border-[#121316] shadow-xs"
                     : "bg-white dark:bg-[#141519] text-neutral-700 dark:text-neutral-300 border-black/[0.08] dark:border-white/[0.08] hover:border-black/30"

@@ -55,8 +55,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#problems" className="hover:text-white transition-colors">
-                  Problem Statements
+                <a href="#leadership" className="hover:text-white transition-colors">
+                  Leadership &amp; Vision
                 </a>
               </li>
               <li>
