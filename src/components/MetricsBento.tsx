@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, Code2, Cpu, Sparkles, Layers, Award } from "lucide-react";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function MetricsBento() {
   return (
@@ -45,9 +46,10 @@ export default function MetricsBento() {
       </div>
 
       {/* Spacious 2-Column Broadsheet Dossier (Software vs Hardware) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-stretch mb-20">
+      <ScrollReveal preset="staggerUp" stagger={0.12} childSelector=".broadside-card">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-stretch mb-20">
         {/* Software Broadside */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#121417] border border-black/[0.08] dark:border-white/[0.08] flex flex-col justify-between shadow-xs relative overflow-hidden group hover:border-[#FF7700]/40 transition-colors">
+        <div className="broadside-card p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#121417] border border-black/[0.08] dark:border-white/[0.08] flex flex-col justify-between shadow-xs relative overflow-hidden group hover:border-[#FF7700]/40 transition-colors">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-bl-full pointer-events-none" />
 
           <div>
@@ -103,7 +105,7 @@ export default function MetricsBento() {
         </div>
 
         {/* Hardware Broadside */}
-        <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#121417] border border-black/[0.08] dark:border-white/[0.08] flex flex-col justify-between shadow-xs relative overflow-hidden group hover:border-[#FF7700]/40 transition-colors">
+        <div className="broadside-card p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#121417] border border-black/[0.08] dark:border-white/[0.08] flex flex-col justify-between shadow-xs relative overflow-hidden group hover:border-[#FF7700]/40 transition-colors">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#FF7700]/5 to-transparent rounded-bl-full pointer-events-none" />
 
           <div>
@@ -158,59 +160,62 @@ export default function MetricsBento() {
           </div>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Editorial National Benchmark Metrics Strip */}
-      <div className="p-8 sm:p-12 rounded-3xl bg-neutral-900 text-white dark:bg-[#14161A] border border-neutral-800 shadow-lg">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-neutral-800">
-          <div className="pt-4 md:pt-0 md:pr-6">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
-              APEX COHORT CAPACITY
-            </span>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-2">
-              1.8M+
+      <ScrollReveal preset="scaleIn" delay={0.1}>
+        <div className="p-8 sm:p-12 rounded-3xl bg-neutral-900 text-white dark:bg-[#14161A] border border-neutral-800 shadow-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-y md:divide-y-0 md:divide-x divide-neutral-800">
+            <div className="pt-4 md:pt-0 md:pr-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
+                APEX COHORT CAPACITY
+              </span>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-2">
+                1.8M+
+              </div>
+              <p className="text-xs text-neutral-400 font-normal">
+                Student participants registered across 28 States and 8 Union Territories.
+              </p>
             </div>
-            <p className="text-xs text-neutral-400 font-normal">
-              Student participants registered across 28 States and 8 Union Territories.
-            </p>
-          </div>
 
-          <div className="pt-4 md:pt-0 md:px-6">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
-              GOVERNMENT CHALLENGES
-            </span>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#FF7700] mb-2">
-              3,158
+            <div className="pt-4 md:pt-0 md:px-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
+                GOVERNMENT CHALLENGES
+              </span>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#FF7700] mb-2">
+                3,158
+              </div>
+              <p className="text-xs text-neutral-400 font-normal">
+                Active problem statements contributed by 60+ Central Ministries.
+              </p>
             </div>
-            <p className="text-xs text-neutral-400 font-normal">
-              Active problem statements contributed by 60+ Central Ministries.
-            </p>
-          </div>
 
-          <div className="pt-4 md:pt-0 md:px-6">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
-              PAN-INDIA NODAL LABS
-            </span>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-2">
-              75+
+            <div className="pt-4 md:pt-0 md:px-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
+                PAN-INDIA NODAL LABS
+              </span>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-2">
+                75+
+              </div>
+              <p className="text-xs text-neutral-400 font-normal">
+                Premier IITs, NITs, and IIITs hosting synchronized national grand finales.
+              </p>
             </div>
-            <p className="text-xs text-neutral-400 font-normal">
-              Premier IITs, NITs, and IIITs hosting synchronized national grand finales.
-            </p>
-          </div>
 
-          <div className="pt-4 md:pt-0 md:pl-6">
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
-              INCUBATION & CAPITAL
-            </span>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-emerald-400 mb-2">
-              ₹2.5 Cr+
+            <div className="pt-4 md:pt-0 md:pl-6">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 block mb-2">
+                INCUBATION & CAPITAL
+              </span>
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-emerald-400 mb-2">
+                ₹2.5 Cr+
+              </div>
+              <p className="text-xs text-neutral-400 font-normal">
+                Cumulative prize capital, prototyping grants, and institutional funding.
+              </p>
             </div>
-            <p className="text-xs text-neutral-400 font-normal">
-              Cumulative prize capital, prototyping grants, and institutional funding.
-            </p>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

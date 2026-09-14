@@ -1,318 +1,428 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
-import { ArrowUpRight, CheckCircle2, ChevronRight, Cpu, Layers, Sparkles, Terminal } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { ArrowUpRight } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
-
-interface ShowcaseItem {
-  id: string;
-  category: string;
-  title: string;
-  code: string;
-  image: string;
-  alt: string;
-  bottleneck: string;
-  system: string;
-  ministry: string;
-  metrics: { label: string; value: string }[];
-  tags: string[];
-}
-
-const SHOWCASE_ITEMS: ShowcaseItem[] = [
-  {
-    id: "energy",
-    category: "Energy & Grid Infrastructure",
-    title: "Asset Performance Monitoring",
-    code: "SIH-2026-EN01",
-    image: "/showcase/wind_turbine.jpg",
-    alt: "Aerial wind turbine over arable landscape",
-    bottleneck:
-      "Energy teams manage assets across fragmented telemetry, weather reports, maintenance logs, and market signals while operational risk moves faster than manual review cycles.",
-    system:
-      "Student finalists engineered edge neural telemetry that unifies turbine vibration FFTs, wind shear forecasts, and transformer heat signatures into sub-second predictive trip prevention models.",
-    ministry: "Ministry of New and Renewable Energy / NTPC",
-    metrics: [
-      { label: "Downtime Cut", value: "-42%" },
-      { label: "Inference Latency", value: "85ms" },
-      { label: "Deployment", value: "14 Grid Hubs" },
-    ],
-    tags: ["Renewable Energy", "Edge AI", "Predictive Maintenance", "Grid Telemetry"],
-  },
-  {
-    id: "space",
-    category: "Space Technology & ISRO",
-    title: "Autonomous Rover Telemetry",
-    code: "SIH-2026-SP04",
-    image: "/showcase/space_rover.jpg",
-    alt: "Autonomous lunar planetary exploration rover on cratered terrain",
-    bottleneck:
-      "Lunar and Martian rovers experience critical 3 to 20-minute signal transmission lags to ground stations, making teleoperated obstacle avoidance dangerous on rugged boulder terrains.",
-    system:
-      "An onboard stereo-vision SLAM pipeline running on radiation-tolerant FPGA modules autonomously builds real-time 3D elevation maps, safely plotting traversal routes at 3.5x normal speeds.",
-    ministry: "Department of Space (ISRO)",
-    metrics: [
-      { label: "Obstacle Precision", value: "98.4%" },
-      { label: "Onboard Compute", value: "<15W" },
-      { label: "Autonomy Level", value: "Level 4" },
-    ],
-    tags: ["ISRO", "Computer Vision", "Lunar Navigation", "FPGA"],
-  },
-  {
-    id: "robotics",
-    category: "Disaster Risk & Robotics",
-    title: "Search & Rescue Alpine Drone",
-    code: "SIH-2026-RO08",
-    image: "/showcase/rescue_drone.jpg",
-    alt: "Search and rescue quadcopter drone over mountain valley",
-    bottleneck:
-      "Mountain landslides and avalanches sever road access and radio relays, leaving rescue teams blind to survivor locations during the critical first 24-hour survival window.",
-    system:
-      "A swarm of tetherless UAVs equipped with micro-radar life sensors and infrared thermal arrays establishes a decentralized Wi-Fi Direct rescue mesh, streaming GPS survivor coordinates directly to emergency responders.",
-    ministry: "National Disaster Management Authority (NDMA)",
-    metrics: [
-      { label: "Response Window", value: "<18 Min" },
-      { label: "Thermal Range", value: "1.2 km" },
-      { label: "Mesh Relay", value: "6 Nodes" },
-    ],
-    tags: ["NDMA", "Autonomous UAV", "Thermal Vision", "Mesh Network"],
-  },
-];
 
 interface EditorialSplitShowcaseProps {
   onOpenExplorer?: (theme?: string) => void;
 }
 
 export default function EditorialSplitShowcase({ onOpenExplorer }: EditorialSplitShowcaseProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const imagesRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useGSAP(
-    () => {
-      const sections = gsap.utils.toArray<HTMLElement>(".editorial-content-block");
+  // GSAP clean swipe up transitions
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
 
-      sections.forEach((sec, idx) => {
-        ScrollTrigger.create({
-          trigger: sec,
-          start: "top center",
-          end: "bottom center",
-          onEnter: () => setActiveIndex(idx),
-          onEnterBack: () => setActiveIndex(idx),
-        });
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const ctx = gsap.context(() => {
+      // Swipe up animation for each row's image and text block
+      imagesRef.current.forEach((imgContainer, i) => {
+        if (!imgContainer) return;
+        const img = imgContainer.querySelector("img");
+
+        gsap.fromTo(
+          imgContainer,
+          { clipPath: "inset(100% 0% 0% 0%)", y: 40 },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            y: 0,
+            duration: 1.05,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: imgContainer,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        if (img) {
+          gsap.fromTo(
+            img,
+            { scale: 1.15 },
+            {
+              scale: 1,
+              duration: 1.2,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: imgContainer,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
       });
-    },
-    { scope: containerRef }
-  );
+
+      // Swipe up for row text content
+      rowsRef.current.forEach((row) => {
+        if (!row) return;
+        const textElements = row.querySelectorAll(".editorial-swipe-text");
+        if (textElements.length > 0) {
+          gsap.fromTo(
+            textElements,
+            { y: 30, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.08,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: row,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
-      ref={containerRef}
+      ref={sectionRef}
       id="editorial-showcase"
-      className="relative w-full bg-[#FAF9F5] dark:bg-[#0C0D0E] text-[#121316] dark:text-[#F3F4F6] border-y border-neutral-200/80 dark:border-neutral-800/80 transition-colors duration-500"
+      className="relative w-full bg-[#FAF8F5] dark:bg-[#0C0D0E] text-[#141518] dark:text-[#F3F4F6] py-16 sm:py-24 border-y border-neutral-300 dark:border-neutral-800 transition-colors duration-500 font-serif selection:bg-[#FF7700] selection:text-white"
     >
-      {/* Editorial Header Bar */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 pb-8 flex flex-col md:flex-row md:items-end justify-between border-b border-neutral-200 dark:border-neutral-800/60 gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#FF7700] animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#FF7700] dark:text-[#FFA040]">
-              Case Dossier / Problem Engineering
-            </span>
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Top Section Eyebrow Rule */}
+        <div className="flex items-center justify-between pb-6 mb-12 border-b border-neutral-300 dark:border-neutral-800 text-xs font-mono tracking-[0.22em] text-neutral-500 uppercase">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF7700]" />
+            <span>CASE DOSSIERS // PROTOTYPE TO PRODUCTION</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-neutral-900 dark:text-white font-sans">
-            How Hackathon Solutions <br className="hidden sm:inline" />
-            Become Sovereign Systems.
-          </h2>
+          <span className="hidden sm:inline">SMART INDIA HACKATHON RESEARCH JOURNAL</span>
         </div>
-        <p className="text-sm font-mono text-neutral-500 dark:text-neutral-400 max-w-sm">
-          Scroll to explore benchmark problem statements where student architecture bridges academic research into live ministerial deployment.
-        </p>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+        {/* Section Headline */}
+        <div className="mb-16 max-w-3xl">
+          <h2 className="text-3xl sm:text-5xl lg:text-[3.6rem] font-bold text-neutral-900 dark:text-white leading-[1.1] font-sans tracking-tight mb-4">
+            How Hackathon Solutions <br />
+            <span className="font-serif italic font-normal text-neutral-700 dark:text-neutral-300">
+              Become Sovereign Systems.
+            </span>
+          </h2>
+          <p className="text-sm sm:text-base font-sans text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl">
+            A documented archival record of collegiate engineering breakthroughs deployed across national space, power grid, and emergency rescue infrastructure.
+          </p>
+        </div>
+
+        {/* Main Editorial Journal Spread: 8-Column Left Stream vs 4-Column Right Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start pt-4 border-t border-neutral-300 dark:border-neutral-800">
           
-          {/* Left Sticky Viewport Column (Matches user's reference screenshot) */}
-          <div className="lg:col-span-6 lg:sticky lg:top-28 z-20">
-            <div className="relative rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800 shadow-2xl group">
-              
-              {/* Media aspect container */}
-              <div className="relative aspect-[4/3] sm:aspect-[4/3] w-full overflow-hidden bg-black">
-                {SHOWCASE_ITEMS.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className={`absolute inset-0 transition-opacity duration-700 ease-out transform ${
-                      activeIndex === idx
-                        ? "opacity-100 scale-100 pointer-events-auto"
-                        : "opacity-0 scale-105 pointer-events-none"
-                    }`}
-                  >
-                    <Image
-                      src={item.image}
-                      alt={item.alt}
-                      fill
-                      priority={idx === 0}
-                      className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                    {/* Subtle Vignette Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  </div>
-                ))}
-
-                {/* Overlaid Data Badge */}
-                <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15">
-                  <Cpu className="w-3.5 h-3.5 text-[#00F5A0]" />
-                  <span className="text-[11px] font-mono tracking-wider text-white">
-                    {SHOWCASE_ITEMS[activeIndex].code}
-                  </span>
-                </div>
-
-                {/* Ministry Pin Tag */}
-                <div className="absolute bottom-4 left-4 right-16 z-10">
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-neutral-400">
-                    Sponsoring Authority
-                  </div>
-                  <div className="text-xs sm:text-sm font-semibold text-white truncate">
-                    {SHOWCASE_ITEMS[activeIndex].ministry}
-                  </div>
-                </div>
-
-                {/* Right Edge Vertical Progress Indicator (Exact match to user's uploaded reference: | · · ·) */}
-                <div className="absolute right-4 bottom-5 top-5 flex flex-col justify-end items-center gap-2 z-20 pointer-events-none">
-                  {SHOWCASE_ITEMS.map((_, idx) => (
-                    <div key={idx} className="flex flex-col items-center">
-                      {activeIndex === idx ? (
-                        <div className="w-[3px] h-6 rounded-full bg-white transition-all duration-300 shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-                      ) : (
-                        <div className="w-1.5 h-1.5 rounded-full bg-white/40 my-0.5 transition-all duration-300" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom Quick-Metrics Strip */}
-              <div className="grid grid-cols-3 divide-x divide-neutral-200 dark:divide-neutral-800 bg-neutral-100/90 dark:bg-neutral-900/90 border-t border-neutral-200 dark:border-neutral-800 py-3 px-4 backdrop-blur-sm">
-                {SHOWCASE_ITEMS[activeIndex].metrics.map((m, mIdx) => (
-                  <div key={mIdx} className="px-2 text-center">
-                    <div className="text-base sm:text-lg font-bold font-mono text-neutral-900 dark:text-white">
-                      {m.value}
-                    </div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                      {m.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile navigation buttons */}
-            <div className="flex lg:hidden items-center justify-between mt-4">
-              <span className="text-xs font-mono text-neutral-500">
-                0{activeIndex + 1} / 0{SHOWCASE_ITEMS.length}
-              </span>
-              <div className="flex gap-2">
-                {SHOWCASE_ITEMS.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      const el = document.getElementById(`dossier-item-${idx}`);
-                      el?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className={`h-2 rounded-full transition-all ${
-                      activeIndex === idx ? "w-6 bg-[#FF7700]" : "w-2 bg-neutral-300 dark:bg-neutral-700"
-                    }`}
-                    aria-label={`Jump to item ${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Editorial Scrolling Column */}
-          <div className="lg:col-span-6 flex flex-col space-y-24 lg:space-y-36 pb-12">
-            {SHOWCASE_ITEMS.map((item, idx) => (
-              <article
-                key={item.id}
-                id={`dossier-item-${idx}`}
-                className="editorial-content-block flex flex-col pt-4 lg:pt-8"
+          {/* ================= LEFT 8 COLS: ALTERNATING MAGAZINE DOSSIERS ================= */}
+          <div className="lg:col-span-8 flex flex-col space-y-16">
+            
+            {/* Dossier 01: Image Left, Text Right */}
+            <div
+              ref={(node) => {
+                rowsRef.current[0] = node;
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pb-14 border-b border-neutral-200 dark:border-neutral-800"
+            >
+              {/* Image Frame with GSAP Swipe Up */}
+              <div
+                ref={(node) => {
+                  imagesRef.current[0] = node;
+                }}
+                className="relative aspect-[4/3] sm:aspect-[4/3] w-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 will-change-transform shadow-xs"
               >
-                {/* Category Minimal Tag */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#FF7700] dark:text-[#FFA040]">
-                    {item.category}
-                  </span>
-                  <span className="text-xs font-mono text-neutral-400 dark:text-neutral-500">
-                    [ 0{idx + 1} // 0{SHOWCASE_ITEMS.length} ]
-                  </span>
-                </div>
+                <Image
+                  src="/showcase/wind_turbine.jpg"
+                  alt="Turbine telemetry over renewable energy site"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover object-center"
+                />
+              </div>
 
-                {/* Big Bold Minimalist Headline (Matches user reference style) */}
-                <h3 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-[1.08] mb-8 font-sans">
-                  {item.title}
+              {/* Text Block */}
+              <div className="flex flex-col justify-between pr-2">
+                <span className="editorial-swipe-text text-[10px] font-mono tracking-[0.2em] uppercase text-neutral-500 mb-3 block">
+                  RENEWABLE GRID &bull; NTPC &bull; SIH1602
+                </span>
+
+                <h3 className="editorial-swipe-text text-2xl sm:text-3xl font-serif italic text-neutral-900 dark:text-white leading-snug mb-4 font-normal">
+                  Ut labore et quaerat: Real-time turbine vibration FFTs prevent catastrophic grid trips.
                 </h3>
 
-                {/* Structured Breakdown: Bottleneck */}
-                <div className="mb-6 group">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                    <h4 className="text-sm font-semibold tracking-wide uppercase font-mono text-neutral-900 dark:text-neutral-200">
-                      Bottleneck
-                    </h4>
-                  </div>
-                  <p className="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300 font-normal">
-                    {item.bottleneck}
-                  </p>
-                </div>
+                <p className="editorial-swipe-text text-sm font-sans text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6 font-normal">
+                  Student finalists engineered an onboard neural telemetry unit that merges blade vibration frequencies with LWIR thermal imaging, delivering sub-100ms trip prevention across 14 central grid stations.
+                </p>
 
-                {/* Structured Breakdown: System */}
-                <div className="mb-8 group">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <h4 className="text-sm font-semibold tracking-wide uppercase font-mono text-neutral-900 dark:text-neutral-200">
-                      System
-                    </h4>
-                  </div>
-                  <p className="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300 font-normal">
-                    {item.system}
-                  </p>
-                </div>
-
-                {/* Tags & Action Row */}
-                <div className="pt-4 border-t border-neutral-200/80 dark:border-neutral-800/80 flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    {item.tags.map((tag, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="px-2.5 py-1 text-xs font-mono rounded-md bg-neutral-100 dark:bg-neutral-800/70 text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700/50"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-
+                <div className="editorial-swipe-text">
                   <button
-                    onClick={() => {
-                      const problemSection = document.getElementById("problems");
-                      problemSection?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="inline-flex items-center gap-2 text-xs font-mono font-medium text-[#FF7700] dark:text-[#FFA040] hover:underline cursor-pointer group"
+                    onClick={() => onOpenExplorer?.("Clean & Green Technology")}
+                    className="inline-block px-6 py-2.5 bg-black text-white dark:bg-white dark:text-black text-[10px] font-mono uppercase tracking-[0.2em] font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                   >
-                    <span>View similar statements</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    READ MORE &rarr;
                   </button>
                 </div>
-              </article>
-            ))}
+              </div>
+            </div>
+
+            {/* Dossier 02: INVERTED RHYTHM (Text Left, Image Right) - Exactly as in user photo */}
+            <div
+              ref={(node) => {
+                rowsRef.current[1] = node;
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pb-14 border-b border-neutral-200 dark:border-neutral-800"
+            >
+              {/* Text Block (Left) */}
+              <div className="flex flex-col justify-between order-2 md:order-1 pr-2">
+                <span className="editorial-swipe-text text-[10px] font-mono tracking-[0.2em] uppercase text-neutral-500 mb-3 block">
+                  SPACE TECHNOLOGY &bull; ISRO &bull; SIH1601
+                </span>
+
+                <h3 className="editorial-swipe-text text-2xl sm:text-3xl font-serif italic text-neutral-900 dark:text-white leading-snug mb-4 font-normal">
+                  Real Talk: Overcoming 20-minute telemetry lag with onboard lunar FPGA SLAM.
+                </h3>
+
+                <p className="editorial-swipe-text text-sm font-sans text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6 font-normal">
+                  Rather than waiting on manual Earth mission control commands, the team deployed a radiation-tolerant edge vision pipeline that maps stereo lunar craters autonomously at 3.5x standard speeds.
+                </p>
+
+                <div className="editorial-swipe-text">
+                  <button
+                    onClick={() => onOpenExplorer?.("Space Technology (ISRO)")}
+                    className="inline-block px-6 py-2.5 bg-black text-white dark:bg-white dark:text-black text-[10px] font-mono uppercase tracking-[0.2em] font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                  >
+                    READ MORE &rarr;
+                  </button>
+                </div>
+              </div>
+
+              {/* Image Frame (Right) with GSAP Swipe Up */}
+              <div
+                ref={(node) => {
+                  imagesRef.current[1] = node;
+                }}
+                className="relative aspect-[4/3] sm:aspect-[4/3] w-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 will-change-transform shadow-xs order-1 md:order-2"
+              >
+                <Image
+                  src="/showcase/space_rover.jpg"
+                  alt="Autonomous lunar exploration rover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover object-center"
+                />
+              </div>
+            </div>
+
+            {/* Dossier 03: Image Left, Text Right */}
+            <div
+              ref={(node) => {
+                rowsRef.current[2] = node;
+              }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pb-14 border-b border-neutral-200 dark:border-neutral-800"
+            >
+              {/* Image Frame with GSAP Swipe Up */}
+              <div
+                ref={(node) => {
+                  imagesRef.current[2] = node;
+                }}
+                className="relative aspect-[4/3] sm:aspect-[4/3] w-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 will-change-transform shadow-xs"
+              >
+                <Image
+                  src="/showcase/rescue_drone.jpg"
+                  alt="Search and rescue quadcopter over mountain valley"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover object-center"
+                />
+              </div>
+
+              {/* Text Block */}
+              <div className="flex flex-col justify-between pr-2">
+                <span className="editorial-swipe-text text-[10px] font-mono tracking-[0.2em] uppercase text-neutral-500 mb-3 block">
+                  DISASTER RISK &bull; NDMA &bull; SIH1608
+                </span>
+
+                <h3 className="editorial-swipe-text text-2xl sm:text-3xl font-serif italic text-neutral-900 dark:text-white leading-snug mb-4 font-normal">
+                  Alpine Mesh Relays: Penetrating avalanche blind zones in under 18 minutes.
+                </h3>
+
+                <p className="editorial-swipe-text text-sm font-sans text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6 font-normal">
+                  When mountain roads sever communication lines, this autonomous swarm of tetherless UAVs deploys ad-hoc Wi-Fi relays and micro-radar life detectors to pinpoint victims during the golden survival window.
+                </p>
+
+                <div className="editorial-swipe-text">
+                  <button
+                    onClick={() => onOpenExplorer?.("Robotics and Drones")}
+                    className="inline-block px-6 py-2.5 bg-black text-white dark:bg-white dark:text-black text-[10px] font-mono uppercase tracking-[0.2em] font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                  >
+                    READ MORE &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Archive Pagination Strip (Matches Reference Bottom Rule) */}
+            <div className="flex items-center justify-between pt-6 text-xs font-mono uppercase tracking-[0.2em] text-neutral-500">
+              <button
+                onClick={() => {
+                  const el = document.getElementById("arena");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+              >
+                &larr; THE DUAL ARENA
+              </button>
+
+              <button
+                onClick={() => {
+                  const el = document.getElementById("problems");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="hover:text-neutral-900 dark:hover:text-white transition-colors font-bold text-neutral-800 dark:text-neutral-200"
+              >
+                EXPLORE ALL 3,100+ PROBLEMS &rarr;
+              </button>
+            </div>
           </div>
 
+          {/* ================= RIGHT 4 COLS: EDITORIAL SIDEBAR ================= */}
+          <div className="lg:col-span-4 lg:pl-10 lg:border-l border-neutral-300 dark:border-neutral-800 flex flex-col space-y-12">
+            
+            {/* Story Heading Block */}
+            <div>
+              <div className="pb-3 mb-6 border-b border-neutral-300 dark:border-neutral-800">
+                <h4 className="text-2xl sm:text-3xl font-serif italic font-normal text-neutral-900 dark:text-white">
+                  Read our Story
+                </h4>
+              </div>
+
+              <div className="space-y-4 font-sans text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">
+                <p>
+                  Smart India Hackathon was conceived not as a collegiate coding contest, but as an open-innovation sovereign mechanism where university labs solve hard public problems.
+                </p>
+                <p>
+                  Across 75 premier nodal centers, teams author operational code directly with directors and scientists from ISRO, DRDO, and central departments—turning raw academic talent into mission-critical infrastructure.
+                </p>
+              </div>
+            </div>
+
+            {/* Editorial Showcase Portrait Photo */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-200 dark:bg-neutral-800 shadow-xs border border-neutral-300/60 dark:border-neutral-700/60">
+              <Image
+                src="/showcase/space_rover.jpg"
+                alt="Engineering prototype in laboratory"
+                fill
+                sizes="(max-width: 1024px) 100vw, 30vw"
+                className="object-cover object-center grayscale contrast-125 hover:grayscale-0 transition-all duration-700"
+              />
+              <div className="absolute bottom-3 left-3 right-3 p-2 bg-black/60 backdrop-blur-xs text-[10px] font-mono text-white/90 uppercase tracking-widest text-center">
+                CHANDRAYAAN FIELD TELEMETRY BENCHMARK
+              </div>
+            </div>
+
+            {/* Numbered Editorial Links List (Exact format from user reference) */}
+            <div>
+              <span className="text-[11px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-6">
+                LINKS & ARCHIVES:
+              </span>
+
+              <ul className="space-y-6">
+                <li>
+                  <a
+                    href="#problems"
+                    className="flex items-baseline group"
+                  >
+                    <span className="text-2xl font-serif italic text-neutral-800 dark:text-neutral-200 mr-4 group-hover:text-[#FF7700] transition-colors">
+                      01
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-mono uppercase tracking-wider font-bold text-neutral-900 dark:text-white group-hover:text-[#FF7700] transition-colors flex items-center gap-1">
+                        <span>MINISTRY PROBLEM STATEMENTS</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </span>
+                      <span className="text-[11px] font-sans text-neutral-500 font-normal">
+                        Browse all 3,158 live sovereign challenges
+                      </span>
+                    </div>
+                  </a>
+                </li>
+
+                <li className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
+                  <a
+                    href="#journey"
+                    className="flex items-baseline group"
+                  >
+                    <span className="text-2xl font-serif italic text-neutral-800 dark:text-neutral-200 mr-4 group-hover:text-[#FF7700] transition-colors">
+                      02
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-mono uppercase tracking-wider font-bold text-neutral-900 dark:text-white group-hover:text-[#FF7700] transition-colors flex items-center gap-1">
+                        <span>NATIONAL PROCESS ROADMAP</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </span>
+                      <span className="text-[11px] font-sans text-neutral-500 font-normal">
+                        6-phase journey from campus to Grand Finale
+                      </span>
+                    </div>
+                  </a>
+                </li>
+
+                <li className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
+                  <a
+                    href="#radar"
+                    className="flex items-baseline group"
+                  >
+                    <span className="text-2xl font-serif italic text-neutral-800 dark:text-neutral-200 mr-4 group-hover:text-[#FF7700] transition-colors">
+                      03
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-mono uppercase tracking-wider font-bold text-neutral-900 dark:text-white group-hover:text-[#FF7700] transition-colors flex items-center gap-1">
+                        <span>75+ NODAL CENTERS RADAR</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </span>
+                      <span className="text-[11px] font-sans text-neutral-500 font-normal">
+                        IITs, NITs, and IIITs hosting synchronized cohorts
+                      </span>
+                    </div>
+                  </a>
+                </li>
+
+                <li className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
+                  <a
+                    href="#archive"
+                    className="flex items-baseline group"
+                  >
+                    <span className="text-2xl font-serif italic text-neutral-800 dark:text-neutral-200 mr-4 group-hover:text-[#FF7700] transition-colors">
+                      04
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-mono uppercase tracking-wider font-bold text-neutral-900 dark:text-white group-hover:text-[#FF7700] transition-colors flex items-center gap-1">
+                        <span>PAST EDITIONS ARCHIVE (2017-2025)</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </span>
+                      <span className="text-[11px] font-sans text-neutral-500 font-normal">
+                        150+ funded startups and national IP history
+                      </span>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>

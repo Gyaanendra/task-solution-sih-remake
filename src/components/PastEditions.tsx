@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { PAST_EDITIONS, PastEdition } from "@/data/sih-data";
 import { ChevronRight } from "lucide-react";
+import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function PastEditions() {
   const [selectedEdition, setSelectedEdition] = useState<PastEdition>(PAST_EDITIONS[0]);
@@ -16,9 +18,13 @@ export default function PastEditions() {
         </div>
 
         <div className="lg:col-span-10">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Eight Consecutive Years of Proven Track Record.
-          </h2>
+          <StaggeredTextReveal
+            as="h2"
+            text="Eight Consecutive Years of Proven Track Record."
+            className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white"
+            delay={0.1}
+            stagger={0.045}
+          />
           <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-normal">
             Tracing how an experimental 2017 initiative expanded into a national deep-tech pipeline generating 150+ operational venture spin-offs.
           </p>
@@ -26,7 +32,8 @@ export default function PastEditions() {
       </div>
 
       {/* Grid: Timeline List (5 cols) & Spotlight Card (7 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <ScrollReveal preset="fadeUp" delay={0.15}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-5 space-y-2">
           {PAST_EDITIONS.map((ed) => {
             const isSelected = selectedEdition.year === ed.year;
@@ -103,6 +110,7 @@ export default function PastEditions() {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </ScrollReveal>
+  </section>
+);
 }

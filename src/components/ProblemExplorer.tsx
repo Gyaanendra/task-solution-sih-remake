@@ -15,6 +15,8 @@ import {
   ProblemStatement,
   MINISTRIES_LIST,
 } from "@/data/sih-data";
+import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface ProblemExplorerProps {
   selectedThemeFilter: string | null;
@@ -71,13 +73,17 @@ export default function ProblemExplorer({
       {/* Header with Left Micro-Label */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10 items-end">
         <div className="lg:col-span-2">
-          <span className="micro-label block">04 / CHALLENGES</span>
+          <span className="micro-label block">04 / CATALOG</span>
         </div>
 
         <div className="lg:col-span-7">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Live Problem Statement Catalog.
-          </h2>
+          <StaggeredTextReveal
+            as="h2"
+            text="Live Problem Statement Catalog."
+            className="text-3xl sm:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white"
+            delay={0.1}
+            stagger={0.045}
+          />
           <p className="mt-2 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 font-normal">
             Real challenges formulated and released directly by central ministries, defense laboratories, and enterprise partners.
           </p>
@@ -89,7 +95,8 @@ export default function ProblemExplorer({
       </div>
 
       {/* Control Bar: Search & Subtle Filters */}
-      <div className="bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-4 mb-8 shadow-xs space-y-4">
+      <ScrollReveal preset="fadeUp" delay={0.05}>
+        <div className="bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-4 mb-8 shadow-xs space-y-4">
         <div className="flex flex-col md:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -159,71 +166,74 @@ export default function ProblemExplorer({
           )}
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Problem Cards Grid (HireLaw Style) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProblems.map((ps) => {
-          const isBookmarked = bookmarkedIds.includes(ps.id);
+      <ScrollReveal preset="fadeUp" delay={0.1}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProblems.map((ps) => {
+            const isBookmarked = bookmarkedIds.includes(ps.id);
 
-          return (
-            <div
-              key={ps.id}
-              onClick={() => setSelectedPS(ps)}
-              className="group cursor-pointer bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-6 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-                      {ps.code}
-                    </span>
-                    <span className="text-[11px] font-mono text-neutral-400 uppercase">
-                      {ps.category}
-                    </span>
+            return (
+              <div
+                key={ps.id}
+                onClick={() => setSelectedPS(ps)}
+                className="group cursor-pointer bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-6 hover:border-black/30 dark:hover:border-white/30 transition-all shadow-xs flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                        {ps.code}
+                      </span>
+                      <span className="text-[11px] font-mono text-neutral-400 uppercase">
+                        {ps.category}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={(e) => toggleBookmark(ps.id, e)}
+                      className="text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    >
+                      <Bookmark
+                        className={`w-3.5 h-3.5 ${isBookmarked ? "fill-neutral-900 text-neutral-900 dark:fill-white dark:text-white" : ""}`}
+                      />
+                    </button>
                   </div>
 
-                  <button
-                    onClick={(e) => toggleBookmark(ps.id, e)}
-                    className="text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-                  >
-                    <Bookmark
-                      className={`w-3.5 h-3.5 ${isBookmarked ? "fill-neutral-900 text-neutral-900 dark:fill-white dark:text-white" : ""}`}
-                    />
-                  </button>
+                  <span className="text-[11px] font-mono text-[#E65100] block mb-1.5 uppercase font-semibold">
+                    {ps.ministry}
+                  </span>
+
+                  <h3 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors line-clamp-2 mb-2 leading-snug">
+                    {ps.title}
+                  </h3>
+
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-3 leading-relaxed font-normal mb-4">
+                    {ps.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {ps.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <span className="text-[11px] font-mono text-[#E65100] block mb-1.5 uppercase font-semibold">
-                  {ps.ministry}
-                </span>
-
-                <h3 className="text-base font-bold text-neutral-900 dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors line-clamp-2 mb-2 leading-snug">
-                  {ps.title}
-                </h3>
-
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-3 leading-relaxed font-normal mb-4">
-                  {ps.description}
-                </p>
-
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {ps.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-500"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+                <div className="pt-3 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono text-neutral-800 dark:text-neutral-200 group-hover:translate-x-0.5 transition-transform">
+                  <span className="font-semibold">Inspect Challenge &rarr;</span>
+                  <span className="text-neutral-400 text-[11px]">{ps.complexity}</span>
                 </div>
               </div>
-
-              <div className="pt-3 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono text-neutral-800 dark:text-neutral-200 group-hover:translate-x-0.5 transition-transform">
-                <span className="font-semibold">Inspect Challenge &rarr;</span>
-                <span className="text-neutral-400 text-[11px]">{ps.complexity}</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </ScrollReveal>
 
       {/* Problem Statement Detail Modal (Clean Document Style) */}
       {selectedPS && (

@@ -116,8 +116,9 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
     const h = c.startHeight + (100 - c.startHeight) * e;
     const ix = Math.max(0, (100 - w) / 2);
     const iy = Math.max(0, (100 - h) / 2);
-    const r = c.startRadius + (c.endRadius - c.startRadius) * e;
-    frame.style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${r}px)`;
+    const targetBorderPx = 14;
+    const r = Math.max(16, c.startRadius + (c.endRadius - c.startRadius) * e);
+    frame.style.clipPath = `inset(max(${targetBorderPx}px, ${iy}%) max(${targetBorderPx}px, ${ix}%) max(${targetBorderPx}px, ${iy}%) max(${targetBorderPx}px, ${ix}%) round ${r}px)`;
 
     media.style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * e})`;
 

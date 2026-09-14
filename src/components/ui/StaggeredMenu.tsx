@@ -440,26 +440,15 @@ export const StaggeredMenu = ({
       </div>
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
-        {/* Left: Brand Logo with official SIH 2026 artwork */}
+        {/* Left: Brand Logo using official SIH-Logo.png (transparent, no bg container) */}
         <div className="sm-logo" aria-label="Logo">
-          <a href="#" className="flex items-center gap-3.5 group">
-            <div className="relative h-10 w-auto flex items-center justify-center p-1 rounded-lg bg-white/90 dark:bg-white/10 border border-black/10 dark:border-white/15 shadow-xs transition-transform group-hover:scale-105">
-              <img
-                src="/SIH2026-logo.png"
-                alt="Smart India Hackathon 2026 Official Logo"
-                className="h-8 w-auto object-contain"
-                loading="eager"
-              />
-            </div>
-            <div className="flex flex-col justify-center">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#FF7700] font-bold leading-none mb-1">
-                EDITION IX // 2026
-              </span>
-              <span className="text-sm font-black tracking-tight text-neutral-900 dark:text-neutral-100 flex items-center gap-1.5 leading-none">
-                SMART INDIA HACKATHON
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              </span>
-            </div>
+          <a href="#" className="flex items-center group py-1" aria-label="Smart India Hackathon">
+            <img
+              src="/SIH-Logo.png"
+              alt="Smart India Hackathon Official Emblem"
+              className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
+              loading="eager"
+            />
           </a>
         </div>
 

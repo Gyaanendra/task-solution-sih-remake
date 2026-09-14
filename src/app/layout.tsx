@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
-});
-
-const newsreader = Newsreader({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  display: "swap",
-  style: ["normal", "italic"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -48,7 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${plusJakartaSans.variable} ${newsreader.variable} ${jetbrainsMono.variable} scroll-smooth`}
+      className={`${inter.variable} ${jetbrainsMono.variable} scroll-smooth`}
     >
       <head>
         <script

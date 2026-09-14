@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowUpRight, ChevronRight, ShieldCheck, Sparkles } from "lucide-react";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface HeroProps {
   onOpenSpocModal: () => void;
@@ -202,97 +203,101 @@ export default function Hero({ onOpenSpocModal, onOpenGuidelinesModal }: HeroPro
       </div>
 
       {/* Middle Visual Section: Parametric Dot Geometry & Live Sprint Metric */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 my-16 items-stretch">
-        {/* Left: Parametric Constellation Canvas */}
-        <div className="lg:col-span-6 relative h-[300px] sm:h-[360px] bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-8 flex flex-col justify-between overflow-hidden shadow-xs">
-          <div className="flex items-center justify-between z-10">
-            <span className="text-[11px] font-mono tracking-widest text-neutral-500 uppercase font-semibold">
-              DISTRIBUTED COHORT NODES
-            </span>
-            <span className="text-[11px] font-mono text-[#FF7700] font-bold">
-              1.8M MINDS &bull; 75 HUBS
-            </span>
-          </div>
-
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-
-          <div className="z-10 text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
-            RADIAL FERMAT CONSTELLATION MAPPING REAL-TIME COHORT DENSITY ACROSS 28 STATES
-          </div>
-        </div>
-
-        {/* Right: National Scale Dossier */}
-        <div className="lg:col-span-6 bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-8 sm:p-10 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-[11px] font-mono tracking-[0.2em] text-[#FF7700] uppercase font-bold">
-                NATIONAL SCALE & FUNDING
+      <ScrollReveal preset="fadeUp" delay={0.1}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 my-16 items-stretch">
+          {/* Left: Parametric Constellation Canvas */}
+          <div className="lg:col-span-6 relative h-[300px] sm:h-[360px] bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-8 flex flex-col justify-between overflow-hidden shadow-xs">
+            <div className="flex items-center justify-between z-10">
+              <span className="text-[11px] font-mono tracking-widest text-neutral-500 uppercase font-semibold">
+                DISTRIBUTED COHORT NODES
               </span>
-              <span className="text-xs font-mono px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 font-semibold border border-neutral-200 dark:border-neutral-700">
-                ₹1,00,000 PER WINNING PS
+              <span className="text-[11px] font-mono text-[#FF7700] font-bold">
+                1.8M MINDS &bull; 75 HUBS
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight mb-4 [text-wrap:balance]">
-              Direct Ministerial Deployment Pipeline.
-            </h3>
-            <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-normal mb-8">
-              Finalist prototypes don&apos;t end at the demo day. Teams are directly linked to ministerial procurement boards, DST/AICTE incubation centers, and startup funding seed pools.
-            </p>
+            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-black/[0.06] dark:border-white/[0.06] text-xs font-mono">
-              <div>
-                <span className="text-neutral-400 block text-[10px] uppercase">TOTAL PRIZE POOL</span>
-                <span className="text-lg font-bold text-neutral-900 dark:text-white">₹2.5+ Crore</span>
-              </div>
-              <div>
-                <span className="text-neutral-400 block text-[10px] uppercase">STARTUPS FUNDED</span>
-                <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">150+</span>
-              </div>
-              <div>
-                <span className="text-neutral-400 block text-[10px] uppercase">NODAL CENTERS</span>
-                <span className="text-lg font-bold text-[#FF7700]">75+ Hubs</span>
-              </div>
+            <div className="z-10 text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
+              RADIAL FERMAT CONSTELLATION MAPPING REAL-TIME COHORT DENSITY ACROSS 28 STATES
             </div>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono text-neutral-500">
-            <span>REGISTRATION WINDOW CLOSING SOON</span>
-            <a href="#journey" className="hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 font-semibold text-neutral-700 dark:text-neutral-300">
-              <span>View 6-Stage Roadmap</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </a>
+          {/* Right: National Scale Dossier */}
+          <div className="lg:col-span-6 bg-white dark:bg-[#141519] rounded-2xl border border-black/[0.08] dark:border-white/[0.08] p-8 sm:p-10 shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[11px] font-mono tracking-[0.2em] text-[#FF7700] uppercase font-bold">
+                  NATIONAL SCALE & FUNDING
+                </span>
+                <span className="text-xs font-mono px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 font-semibold border border-neutral-200 dark:border-neutral-700">
+                  ₹1,00,000 PER WINNING PS
+                </span>
+              </div>
+
+              <h3 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white tracking-tight mb-4 [text-wrap:balance]">
+                Direct Ministerial Deployment Pipeline.
+              </h3>
+              <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-normal mb-8">
+                Finalist prototypes don&apos;t end at the demo day. Teams are directly linked to ministerial procurement boards, DST/AICTE incubation centers, and startup funding seed pools.
+              </p>
+
+              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-black/[0.06] dark:border-white/[0.06] text-xs font-mono">
+                <div>
+                  <span className="text-neutral-400 block text-[10px] uppercase">TOTAL PRIZE POOL</span>
+                  <span className="text-lg font-bold text-neutral-900 dark:text-white">₹2.5+ Crore</span>
+                </div>
+                <div>
+                  <span className="text-neutral-400 block text-[10px] uppercase">STARTUPS FUNDED</span>
+                  <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">150+</span>
+                </div>
+                <div>
+                  <span className="text-neutral-400 block text-[10px] uppercase">NODAL CENTERS</span>
+                  <span className="text-lg font-bold text-[#FF7700]">75+ Hubs</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-xs font-mono text-neutral-500">
+              <span>REGISTRATION WINDOW CLOSING SOON</span>
+              <a href="#journey" className="hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 font-semibold text-neutral-700 dark:text-neutral-300">
+                <span>View 6-Stage Roadmap</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </ScrollReveal>
 
       {/* Official Government & Partner Accreditation Bar (Featuring Authentic Scraped Logos) */}
-      <div className="pt-10 pb-4 border-t border-black/[0.08] dark:border-white/[0.08]">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <span className="text-[11px] font-mono tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase font-semibold">
-            OFFICIAL STAKEHOLDERS & STRATEGIC ORGANISATIONS
-          </span>
-          <span className="text-[10px] font-mono text-neutral-400">
-            VERIFIED GOVERNMENT OF INDIA ARCHIVE
-          </span>
-        </div>
+      <ScrollReveal preset="fadeUp" delay={0.15}>
+        <div className="pt-10 pb-4 border-t border-black/[0.08] dark:border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+            <span className="text-[11px] font-mono tracking-[0.24em] text-neutral-400 dark:text-neutral-500 uppercase font-semibold">
+              OFFICIAL STAKEHOLDERS & STRATEGIC ORGANISATIONS
+            </span>
+            <span className="text-[10px] font-mono text-neutral-400">
+              VERIFIED GOVERNMENT OF INDIA ARCHIVE
+            </span>
+          </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-4 items-center">
-          {partnerLogos.map((partner) => (
-            <div
-              key={partner.name}
-              className="h-16 p-2 rounded-xl bg-white/70 dark:bg-white/5 border border-black/[0.06] dark:border-white/[0.08] flex items-center justify-center group hover:border-[#FF7700]/40 transition-colors shadow-2xs"
-              title={partner.name}
-            >
-              <img
-                src={partner.src}
-                alt={partner.alt}
-                className="max-h-10 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300 dark:brightness-125 opacity-80 group-hover:opacity-100"
-              />
-            </div>
-          ))}
+          <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-4 items-center">
+            {partnerLogos.map((partner) => (
+              <div
+                key={partner.name}
+                className="h-16 p-2 rounded-xl bg-white/70 dark:bg-white/5 border border-black/[0.06] dark:border-white/[0.08] flex items-center justify-center group hover:border-[#FF7700]/40 transition-colors shadow-2xs"
+                title={partner.name}
+              >
+                <img
+                  src={partner.src}
+                  alt={partner.alt}
+                  className="max-h-10 max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300 dark:brightness-125 opacity-80 group-hover:opacity-100"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

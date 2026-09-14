@@ -19,6 +19,7 @@ import CustomCursor from "@/components/ui/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 import ScrollExpand from "@/components/ui/ScrollExpand";
 import StaggeredTextReveal from "@/components/ui/StaggeredTextReveal";
+import Preloader from "@/components/ui/Preloader";
 import { ArrowRight, Film } from "lucide-react";
 
 export default function Home() {
@@ -36,6 +37,9 @@ export default function Home() {
 
   return (
     <SmoothScroll>
+      {/* Sovereign Tech Preloader Animation */}
+      <Preloader />
+
       <main className="relative min-h-screen bg-[#FAF9F5] dark:bg-[#0B0C0E] text-[#121316] dark:text-[#F4F5F7] selection:bg-[#FF7700] selection:text-white">
         {/* Custom magnetic cursor */}
         <CustomCursor />
@@ -56,7 +60,7 @@ export default function Home() {
         <MinistriesMarquee />
 
         {/* React Bits ScrollExpand Cinematic Pinned Feature with /videoplayback.mp4 */}
-        <section className="relative w-full my-12 sm:my-20">
+        <section className="relative w-full my-4 sm:my-8">
           <ScrollExpand
             src="/videoplayback.mp4"
             mediaType="video"
@@ -68,12 +72,12 @@ export default function Home() {
             startWidth={48}
             startHeight={64}
             startRadius={28}
-            endRadius={0}
-            mediaZoom={1.25}
-            scrollDistance={1.3}
-            holdDistance={0.4}
-            smoothing={0.12}
-            overlayScrim={0.55}
+            endRadius={16}
+            mediaZoom={1.2}
+            scrollDistance={0.75}
+            holdDistance={0}
+            smoothing={0.1}
+            overlayScrim={0.52}
           >
             <div className="max-w-3xl mx-auto px-6 text-center flex flex-col items-center">
               <span className="text-xs font-mono uppercase tracking-[0.28em] text-[#FF7700] mb-4 px-3.5 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/15 inline-flex items-center gap-2">
